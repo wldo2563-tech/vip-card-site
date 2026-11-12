@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VIP명함</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="문자로 보내면 대화창에서 금빛으로 빛나는 움직이는 명함. VIP명함.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Noto+Serif+KR:wght@400;600&family=Noto+Sans+KR:wght@300;400;500&display=swap">
+<style>
+/* Layout: 한 줄 세로 흐름. 어두운 바탕 위에 실제 명함 GIF가 주인공, 금색은 선과 글자에만 아껴 씀. */
+:root{
+  --ink:#0b0a08;          /* 바탕: 따뜻한 검정 */
+  --ink-2:#14120e;        /* 한 단계 밝은 면 */
+  --line:#3a3122;         /* 가는 구분선 */
+  --gold:#d9b46a;         /* 금색 강조 */
+  --gold-hi:#f3dfa8;      /* 밝은 금 */
+  --text:#ece6da;         /* 본문 */
+  --muted:#9a9282;        /* 보조 글 */
+  --display:"Cormorant Garamond","Noto Serif KR",Georgia,serif;
+  --serif:"Noto Serif KR","Nanum Myeongjo",Georgia,serif;
+  --sans:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{background:var(--ink)}
+body{margin:0;background:var(--ink);color:var(--text);font:300 16px/1.75 var(--sans);-webkit-font-smoothing:antialiased;word-break:keep-all}
+img{max-width:100%;height:auto;display:block}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--serif);font-weight:600;text-wrap:balance;margin:0;letter-spacing:-.01em}
+.eyebrow{font:500 12px/1 var(--sans);letter-spacing:.32em;color:var(--gold);text-transform:uppercase}
+.gold{background:linear-gradient(100deg,#9c7633 0%,var(--gold) 30%,var(--gold-hi) 50%,var(--gold) 70%,#9c7633 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* 머리 */
+header{border-bottom:1px solid var(--line)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;padding-block:18px}
+.brand{display:flex;align-items:baseline;gap:10px;text-decoration:none}
+.brand b{font:600 22px/1 var(--serif);letter-spacing:.04em}
+.brand span{font:italic 500 15px/1 var(--display);color:var(--muted);letter-spacing:.08em}
+nav{display:flex;gap:28px;font-size:14px;color:var(--muted)}
+nav a{text-decoration:none}
+nav a:hover,nav a:focus-visible{color:var(--gold-hi)}
+
+/* 첫 화면 */
+.hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;padding-block:72px 88px}
+.hero h1{font-size:clamp(34px,5vw,56px);line-height:1.25;margin-block:22px 22px}
+.hero p.lead{font-size:18px;color:var(--muted);max-width:30em;margin:0 0 34px}
+.cta{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border:1px solid var(--gold);color:var(--ink);background:linear-gradient(180deg,var(--gold-hi),var(--gold));font:500 15px/1 var(--sans);text-decoration:none;letter-spacing:.04em}
+.btn.ghost{background:none;color:var(--gold-hi)}
+.btn:focus-visible{outline:2px solid var(--gold-hi);outline-offset:3px}
+.note{font-size:13px;color:var(--muted)}
+
+/* 휴대폰 문자 화면 */
+.phone{justify-self:center;width:min(340px,100%);border:1px solid var(--line);border-radius:38px;padding:14px;background:linear-gradient(160deg,#1c1913,#0e0d0a);box-shadow:0 40px 80px -30px rgba(0,0,0,.9),0 0 0 6px #070605}
+.screen{border-radius:26px;background:#f2f2f4;color:#111;overflow:hidden;font-family:var(--sans)}
+.sbar{display:flex;justify-content:space-between;padding:10px 20px 6px;font-size:12px;font-weight:500}
+.chat-h{text-align:center;padding:4px 0 12px;border-bottom:1px solid #e1e1e5;font-size:13px}
+.chat-h .av{width:38px;height:38px;border-radius:50%;background:#c9c9cf;margin:0 auto 4px;display:grid;place-items:center;color:#fff;font-weight:500}
+.msgs{padding:16px 12px 22px;display:flex;flex-direction:column;gap:6px}
+.time{align-self:center;font-size:11px;color:#8a8a90;margin-bottom:6px}
+.bubble-img{align-self:flex-end;width:86%;border-radius:18px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.bubble{align-self:flex-end;background:#2f7cf6;color:#fff;padding:8px 13px;border-radius:18px;font-size:14px;max-width:80%}
+.sent{align-self:flex-end;font-size:11px;color:#8a8a90}
+
+/* 구역 공통 */
+section{border-top:1px solid var(--line)}
+section > .wrap{padding-block:96px}
+.sec-h{display:grid;gap:16px;max-width:36em;margin-bottom:56px}
+.sec-h h2{font-size:clamp(26px,3.4vw,38px);line-height:1.35}
+.sec-h p{margin:0;color:var(--muted)}
+
+/* 왜 GIF인가 */
+.why{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line)}
+.why div{padding:32px 28px 8px 0;min-width:0}
+.why div + div{padding-left:28px;border-left:1px solid var(--line)}
+.why h3{font-size:19px;margin-bottom:10px}
+.why p{margin:0;color:var(--muted);font-size:15px}
+
+/* 만드는 순서 */
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:28px;counter-reset:s}
+.steps li{counter-increment:s;min-width:0}
+.steps li::before{content:counter(s);display:block;font:italic 500 64px/1 var(--display);color:var(--gold);margin-bottom:14px}
+.steps h3{font-size:19px;margin-bottom:8px}
+.steps p{margin:0;color:var(--muted);font-size:15px}
+
+/* 효과 */
+.fx{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.fx figure{margin:0;min-width:0}
+.fx img{width:100%;aspect-ratio:9/5;background:#000}
+.fx figcaption{padding-top:16px}
+.fx figcaption b{display:block;font:600 17px/1.4 var(--serif);margin-bottom:4px}
+.fx figcaption span{color:var(--muted);font-size:14px}
+.spec{margin-top:40px;font-size:13px;color:var(--muted);letter-spacing:.02em}
+.spec b{color:var(--text);font-weight:500}
+
+/* 요금 */
+.plans{display:grid;grid-template-columns:1fr 1fr;gap:28px;max-width:860px}
+.plan{border:1px solid var(--line);padding:36px 32px;min-width:0;background:var(--ink-2)}
+.plan.vip{border-color:var(--gold);background:linear-gradient(180deg,#1b170f,var(--ink-2))}
+.plan h3{font-size:15px;font-family:var(--sans);font-weight:500;letter-spacing:.2em;color:var(--muted)}
+.plan.vip h3{color:var(--gold)}
+.price{font:600 40px/1.2 var(--display);margin:14px 0 4px;font-variant-numeric:tabular-nums}
+.price small{font:400 15px var(--sans);color:var(--muted);margin-left:6px}
+.plan ul{list-style:none;padding:0;margin:24px 0 0;display:grid;gap:10px;font-size:15px}
+.plan li{padding-left:20px;position:relative}
+.plan li::before{content:"";position:absolute;left:0;top:.75em;width:8px;height:1px;background:var(--gold)}
+
+/* 질문 */
+.faq{max-width:760px;border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{cursor:pointer;list-style:none;padding:22px 32px 22px 0;font:600 17px/1.5 var(--serif);position:relative}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";position:absolute;right:4px;top:18px;font:400 24px/1 var(--display);color:var(--gold)}
+.faq details[open] summary::after{content:"–"}
+.faq summary:focus-visible{outline:1px solid var(--gold);outline-offset:4px}
+.faq p{margin:0 0 22px;color:var(--muted);max-width:40em}
+
+/* 바닥 */
+footer{border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:24px;padding-block:40px 56px}
+footer address{font-style:normal;line-height:1.9}
+footer nav{gap:20px}
+
+@media (max-width:860px){
+  nav.top{display:none}
+  .hero .wrap{grid-template-columns:1fr;gap:48px;padding-block:48px 64px}
+  .why,.steps,.fx{grid-template-columns:1fr}
+  .why div,.why div + div{padding:24px 0;border-left:0;border-bottom:1px solid var(--line)}
+  .plans{grid-template-columns:1fr}
+  section > .wrap{padding-block:64px}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="brand" href="#top"><b class="gold">VIP명함</b><span>Gold Card</span></a>
+    <nav class="top" aria-label="주요 메뉴">
+      <a href="#how">만드는 법</a>
+      <a href="#effects">효과</a>
+      <a href="#pricing">요금</a>
+      <a href="#faq">자주 묻는 질문</a>
+      <a href="#company">회사 소개</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">Moving Gold Business Card</p>
+        <h1>문자 한 통으로<br><span class="gold">빛나는 명함</span>을 건네세요</h1>
+        <p class="lead">처음 만난 분께 보낸 명함이 상대 문자창에서 금빛으로 반짝입니다. 앱 설치도, 링크도 필요 없습니다. 받는 분은 그냥 문자를 열기만 하면 됩니다.</p>
+        <div class="cta">
+          <a class="btn" href="#pricing" aria-label="Google Play 출시 예정">Google Play 출시 예정</a>
+          <a class="btn ghost" href="#how">만드는 법 보기</a>
+        </div>
+        <p class="note" style="margin-top:16px">안드로이드 먼저 출시합니다. 아이폰은 이후 지원 예정입니다.</p>
+      </div>
+
+      <div class="phone" aria-label="문자로 보낸 VIP명함 예시">
+        <div class="screen">
+          <div class="sbar"><span>9:41</span><span>LTE ▮▮▮</span></div>
+          <div class="chat-h"><div class="av">김</div>김대표님</div>
+          <div class="msgs">
+            <span class="time">문자 메시지 · 오늘 오후 2:14</span>
+            <img class="bubble-img" src="assets/card-tilt.gif" width="540" height="300" alt="금색으로 빛나며 살짝 기울어지는 명함">
+            <span class="bubble">오늘 뵙게 되어 반가웠습니다. 홍길동 드림</span>
+            <span class="sent">전송됨</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section aria-labelledby="why-h">
+    <div class="wrap">
+      <div class="sec-h">
+        <p class="eyebrow">Why VIP명함</p>
+        <h2 id="why-h">명함은 첫인상입니다.<br>받는 순간 달라야 합니다.</h2>
+      </div>
+      <div class="why">
+        <div><h3>링크가 아닌 명함 그대로</h3><p>낯선 링크는 누르기 망설여집니다. VIP명함은 움직이는 이미지 한 장으로 보내져 대화창에서 바로 보입니다.</p></div>
+        <div><h3>카톡 없이 문자로</h3><p>처음 만난 분과는 아직 카톡 친구가 아니죠. 전화번호만 있으면 기본 문자로 보낼 수 있습니다.</p></div>
+        <div><h3>명함에는 명함만</h3><p>광고 문구나 군더더기 없이 이름, 직함, 연락처, 로고만 담아 품격을 지킵니다.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how" aria-labelledby="how-h">
+    <div class="wrap">
+      <div class="sec-h">
+        <p class="eyebrow">How it works</p>
+        <h2 id="how-h">1분이면 충분합니다</h2>
+      </div>
+      <ol class="steps">
+        <li><h3>정보 입력</h3><p>카카오, 구글, 페이스북으로 로그인하고 이름, 회사, 직함, 연락처를 적습니다. 로고가 있으면 함께 올립니다.</p></li>
+        <li><h3>재질과 빛 고르기</h3><p>검정 바탕에 금색 글씨가 기본입니다. 빛 띠, 반짝임, 좌우 기울기 효과를 골라 미리 봅니다.</p></li>
+        <li><h3>문자로 보내기</h3><p>받는 분 번호를 넣으면 기본 문자앱이 열리고 명함이 첨부됩니다. 보내기만 누르면 끝입니다.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="effects" aria-labelledby="fx-h">
+    <div class="wrap">
+      <div class="sec-h">
+        <p class="eyebrow">Effects</p>
+        <h2 id="fx-h">빛이 지나가고, 반짝이고, 기울어집니다</h2>
+        <p>아래는 실제 앱에서 만들어지는 명함 이미지입니다.</p>
+      </div>
+      <div class="fx">
+        <figure><img src="assets/card-sweep.gif" width="540" height="300" alt="빛 띠가 지나가는 금색 명함" loading="lazy"><figcaption><b>빛 띠</b><span>금속 위로 한 줄기 빛이 천천히 지나갑니다.</span></figcaption></figure>
+        <figure><img src="assets/card-glow.gif" width="540" height="300" alt="반짝임이 더해진 금색 명함" loading="lazy"><figcaption><b>빛 띠와 반짝임</b><span>가장자리에 작은 별빛이 반짝입니다. 추천 효과입니다.</span></figcaption></figure>
+        <figure><img src="assets/card-tilt.gif" width="540" height="300" alt="좌우로 살짝 기울어지는 금색 명함" loading="lazy"><figcaption><b>좌우 기울기</b><span>손에 쥔 명함처럼 부드럽게 기울어집니다.</span></figcaption></figure>
+      </div>
+      <p class="spec"><b>540 × 300</b> 명함 비율 9:5 · 한 장 <b>700KB 이하</b>로 문자(MMS) 용량 안에 들어갑니다.</p>
+    </div>
+  </section>
+
+  <section id="pricing" aria-labelledby="price-h">
+    <div class="wrap">
+      <div class="sec-h">
+        <p class="eyebrow">Pricing</p>
+        <h2 id="price-h">무료로 시작하세요</h2>
+      </div>
+      <div class="plans">
+        <div class="plan">
+          <h3>BASIC</h3>
+          <p class="price">무료</p>
+          <ul>
+            <li>하루 3장까지 제작</li>
+            <li>기본 빛 효과</li>
+            <li>고급 효과는 광고 시청 후 사용</li>
+            <li>명함 한쪽에 VIP명함 마크 표시</li>
+          </ul>
+        </div>
+        <div class="plan vip">
+          <h3>VIP</h3>
+          <p class="price"><span class="gold">₩4,900</span><small>/ 월</small></p>
+          <ul>
+            <li>제작 수량 무제한</li>
+            <li>모든 빛 효과와 좌우 기울기</li>
+            <li>광고 없음</li>
+            <li>VIP명함 마크 없이 내 명함만</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note" style="margin-top:20px">정기결제는 Google Play에서 언제든 해지할 수 있습니다.</p>
+    </div>
+  </section>
+
+  <section id="faq" aria-labelledby="faq-h">
+    <div class="wrap">
+      <div class="sec-h">
+        <p class="eyebrow">FAQ</p>
+        <h2 id="faq-h">자주 묻는 질문</h2>
+      </div>
+      <div class="faq">
+        <details><summary>받는 사람도 앱을 깔아야 하나요?</summary><p>아닙니다. 명함은 움직이는 이미지(GIF)로 보내져서 문자, 카카오톡 등 어떤 메신저에서도 그대로 열립니다.</p></details>
+        <details><summary>아이폰에서도 쓸 수 있나요?</summary><p>앱은 안드로이드에서 먼저 출시합니다. 아이폰 사용자에게 보내는 것은 지금도 가능하며, 아이폰용 앱은 이후 준비하겠습니다.</p></details>
+        <details><summary>회사 로고를 넣을 수 있나요?</summary><p>네. 사진첩의 로고 그림을 고르면 흰 배경은 자동으로 지워지고 로고가 원래 색 그대로 들어갑니다.</p></details>
+        <details><summary>구독은 어떻게 해지하나요?</summary><p>Google Play 앱의 결제 및 정기 결제 메뉴에서 해지할 수 있습니다. 해지해도 남은 기간까지는 VIP 혜택이 유지됩니다.</p></details>
+        <details><summary>내 정보는 안전한가요?</summary><p>입력한 명함 정보와 로고는 내 휴대폰에만 저장되고 회사 서버로 보내지 않습니다. 앱에서 언제든 회원 탈퇴로 모두 지울 수 있습니다. 자세한 내용은 <a href="privacy.html">개인정보처리방침</a>을 확인해 주세요.</p></details>
+      </div>
+    </div>
+  </section>
+  <section id="company" aria-labelledby="co-h">
+    <div class="wrap">
+      <div class="sec-h">
+        <p class="eyebrow">COMPANY</p>
+        <h2 id="co-h">IDCSoft</h2>
+      </div>
+      <p><b class="gold">Imagine · Design · Create</b></p>
+      <p>IDCSoft는 상상한 것을 디자인하고, 직접 만들어 내는 소프트웨어 회사입니다. 첫 서비스 VIP명함은 처음 만나는 분께 보내는 명함 한 장으로 "와, 정말 고급스럽다"는 인상을 남기도록 만들었습니다.</p>
+      <p class="note">제휴·문의: <a href="mailto:idcsoft.dev@gmail.com">idcsoft.dev@gmail.com</a></p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <address>
+      <b class="gold" style="font-family:var(--serif);font-size:15px">VIP명함</b><br>
+      상호 아이디씨소프트(IDCSoft) · 대표 최인호 · 사업자등록번호 356-17-01569<br>
+      주소 인천광역시 서해구 간촌로 40, 103동 307호 · 통신판매업 신고 제 2026-인천서해-1229 호<br>
+      문의 <a href="mailto:idcsoft.dev@gmail.com">idcsoft.dev@gmail.com</a>
+    </address>
+    <nav aria-label="정책">
+      <a href="privacy.html">개인정보처리방침</a>
+      <a href="privacy.html#delete">계정 삭제 안내</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>
